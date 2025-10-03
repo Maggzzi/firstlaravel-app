@@ -12,6 +12,7 @@ Route::get('/', function () {
 // Route::get('/planets', [PlanetsController::class, 'index']);
 
 
+// Alle planeten route
 Route::get('/planeten', function () {
 
     $planeten = [
@@ -33,22 +34,34 @@ Route::get('/planeten', function () {
     ]
 ];
 
-    // maak collection van planets (en niet voor elke array hardcoded schrijven)
-    $collection = collect($planeten);
-
-    // wordt gecheckt of GET-parameter al bestaat door (request()->has())
-    if (request()->has('planeet')) {
-        $search = request('planeet');
-        // filtreet nu op name
-        $collection = $collection->where('name', ucfirst(strtolower($search)));
-        
-    }
-
-    return view("planeten", ['planeten' => $collection->all()]);
+    return view("planeten", ['planeten' => $planeten]);
 });
 
 
+//Één planeet route
+Route::get('/planeten/{planeet}', function($planeet) {
 
+    $planeten = collect([
 
+        [
+            'name' => 'Mars',
+            'description' => 'Mars is the fourth planet from the Sun and the second-smallest planet in the Solar System, being larger than only Mercury.'
+        ],
+        [
+            'name' => 'Venus',
+            'description' => 'Venus is the second planet from the Sun. It is named after the Roman goddess of love and beauty.'
+        ],
+        [
+            'name' => 'Earth',
+            'description' => 'Our home planet is the third planet from the Sun, and the only place we know of so far thats inhabited by living things.'
+        ],
+        [
+            'name' => 'Jupiter',
+            'description' => 'Jupiter is a gas giant and doesn\'t have a solid surface, but it may have a solid inner core about the size of Earth.'
+        ]
+    ]);
 
+    $result = $planeten->firstWhere('name', ucfirst(strtolower($planeet)));
 
+    return view('planeet-detail', ['planeet' => $result]);
+});
